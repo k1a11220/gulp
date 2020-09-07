@@ -5,5 +5,12 @@
   "main": "index.js",
   "repository": "https://github.com/k1a11220/supergulp.git",
   "author": "Son Beomsoo <k1a11220@.github.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "gulp": "^4.0.2"
+  }
 }
