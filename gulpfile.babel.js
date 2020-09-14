@@ -1,21 +1,50 @@
 import gulp from "gulp";
 import gpug from "gulp-pug";
 import del from "del";
+// import ws from "gulp-webserver"; it doesn't work :(
+
+import connect from "gulp-connect";
 
 const routes = {
   pug: {
+    watch: "src/**/*.pug",
     src: "src/*.pug",
     dest: "build",
   },
 };
 
 const pug = () =>
-  gulp.src(routes.pug.src).pipe(gpug()).pipe(gulp.dest(routes.pug.dest));
+  gulp
+    .src(routes.pug.src)
+    .pipe(gpug())
+    .pipe(gulp.dest(routes.pug.dest))
+    .pipe(connect.reload());
 
 const clean = () => del(["build"]);
+
+// const webserver = () =>
+//   gulp.src("build").pipe(ws({ livereload: true, open: true }));
+
+const webserver = () => {
+  console.log("webserver");
+  connect.server({
+    root: "build",
+    livereload: true,
+    port: 8002,
+  });
+  return new Promise(function (resolve, reject) {
+    resolve();
+  });
+};
+
+const watch = () => {
+  gulp.watch(routes.pug.watch, pug);
+};
 
 const prepare = gulp.series([clean]);
 
 const assets = gulp.series([pug]);
 
-export const dev = gulp.series([prepare, assets]);
+const postDev = gulp.parallel([webserver, watch]);
+
+export const dev = gulp.series([prepare, assets, postDev]);
