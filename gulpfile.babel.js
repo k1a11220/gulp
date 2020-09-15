@@ -1,6 +1,7 @@
 import gulp from "gulp";
 import gpug from "gulp-pug";
 import del from "del";
+import image from "gulp-image";
 // import ws from "gulp-webserver"; it doesn't work :(
 
 import connect from "gulp-connect";
@@ -10,6 +11,10 @@ const routes = {
     watch: "src/**/*.pug",
     src: "src/*.pug",
     dest: "build",
+  },
+  img: {
+    src: "src/img/*",
+    dest: "build/img",
   },
 };
 
@@ -41,7 +46,10 @@ const watch = () => {
   gulp.watch(routes.pug.watch, pug);
 };
 
-const prepare = gulp.series([clean]);
+const img = () =>
+  gulp.src(routes.img.src).pipe(image()).pipe(gulp.dest(routes.img.dest));
+
+const prepare = gulp.series([clean, img]);
 
 const assets = gulp.series([pug]);
 
